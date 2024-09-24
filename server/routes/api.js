@@ -8,6 +8,7 @@ import * as CategoryController from "../app/controllers/CategoryController.js";
 import * as InvoiceController from "../app/controllers/InvoiceController.js";
 import * as ProductController from "../app/controllers/ProductController.js";
 import * as WishlistController from "../app/controllers/WishlistController.js";
+import AuthenticationMiddleware from "../app/middlewares/AuthenticationMiddleware.js";
 
 
 
@@ -15,9 +16,9 @@ import * as WishlistController from "../app/controllers/WishlistController.js";
 //Users
 router.post("/Login", UsersController.Login)
 router.post("/VerifyLogin", UsersController.VerifyLogin)
-router.post("/CreateUserProfile", UsersController.CreateUserProfile)
-router.post("/UpdateUserProfile", UsersController.UpdateUserProfile)
-router.get("/ReadUserProfile", UsersController.ReadUserProfile)
+router.post("/CreateUserProfile",AuthenticationMiddleware, UsersController.CreateUserProfile)
+router.post("/UpdateUserProfile",AuthenticationMiddleware, UsersController.UpdateUserProfile)
+router.get("/ReadUserProfile",AuthenticationMiddleware, UsersController.ReadUserProfile)
 
 
 //Brands
@@ -27,18 +28,18 @@ router.get("/BrandList", BrandController.BrandList)
 router.get("/CategoryList", CategoryController.CategoryList)
 
 //Cart list
-router.post("/CreateCart", CartListController.CreateCart)
-router.get("/ReadCartList", CartListController.ReadCartList)
-router.post("/UpdateCart", CartListController.UpdateCart)
-router.post("/RemoveCart", CartListController.RemoveCart)
+router.post("/CreateCart",AuthenticationMiddleware, CartListController.CreateCart)
+router.get("/ReadCartList",AuthenticationMiddleware, CartListController.ReadCartList)
+router.post("/UpdateCart",AuthenticationMiddleware, CartListController.UpdateCart)
+router.post("/RemoveCart",AuthenticationMiddleware, CartListController.RemoveCart)
 
 //Review list
 router.post("/CreateProductReview", ProductController.CreateProductReview)
 
 //Wish list
-router.post("/CreateWish", WishlistController.CreateWish)
-router.get("/ReadWishList", WishlistController.ReadWishList)
-router.post("/RemoveWish", WishlistController.RemoveWish)
+router.post("/CreateWish", AuthenticationMiddleware, WishlistController.CreateWish)
+router.get("/ReadWishList",AuthenticationMiddleware, WishlistController.ReadWishList)
+router.post("/RemoveWish",AuthenticationMiddleware,  WishlistController.RemoveWish)
 
 //Products
 router.get("/ProductListBySlider", ProductController.ProductListBySlider)
@@ -47,7 +48,7 @@ router.get("/ProductDetailsID/:ProductID", ProductController.ProductDetailsID)
 router.get("/ProductListByBrand/:BrandID", ProductController.ProductListByBrand)
 router.get("/ProductListByRemark/:Remark", ProductController.ProductListByRemark)
 router.get("/ProductListByKeyword/:Keyword", ProductController.ProductListByKeyword)
-router.get("/ProductReviewListByID", ProductController.ProductReviewListByID)
+router.get("/ProductReviewListByID/:ProductID", ProductController.ProductReviewListByID)
 
 
 

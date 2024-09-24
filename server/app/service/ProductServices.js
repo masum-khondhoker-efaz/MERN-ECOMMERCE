@@ -4,6 +4,7 @@ import SlidersModel from "../models/slidersModel.js";
 import mongoose from "mongoose";
 
 import productsModel from "../models/productsModel.js";
+import reviewsModel from "../models/reviewsModel.js";
 
 const ObjectId = mongoose.Types.ObjectId;
 
@@ -127,8 +128,37 @@ export const ListByRemarkService = async (req)=>{
 
 }
 
-export const ListByKeywordService = async ()=>{
+export const ListByKeywordService = async (req)=>{
+    try {
+        let keyword = req.params.Keyword;
+        let regex = {"$regex":keyword, "$options":"i"};
+        let searchParams = [{title:regex},{shortDes:regex}]
+        let searchQuery = {$or:searchParams}
+        let MatchStage = {$match:searchQuery}
 
+        let JoinWithBrandStage = {$lookup: {from:"brands", localField:"brandID", foreignField:"_id", as:"brand"}};
+
+        let JoinWithCategoryStage = {$lookup: {from:"categories", localField:"categoryID", foreignField:"_id", as:"category"}};
+
+        let UnwindBrandStage = {$unwind:"$brand"};
+        let UnwindCategoryStage = {$unwind:"$category"};
+
+        let ProjectionStage = {$project:{'brand._id':0, 'category._id':0,'categoryID':0,'brandID':0}};
+
+        // Query
+
+        let data = await productsModel.aggregate([
+            MatchStage,
+            JoinWithBrandStage,
+            JoinWithCategoryStage,
+            UnwindBrandStage,
+            UnwindCategoryStage,
+            ProjectionStage
+        ])
+        return {status:"Success", data:data};
+    }catch (error) {
+        return  {status:"Failed", data:error.toString()};
+    }
 }
 
 export const DetailsService = async (req)=>{
@@ -164,7 +194,29 @@ export const DetailsService = async (req)=>{
     }
 }
 
-export const ReviewListService = async ()=>{
+export const ReviewListService = async (req)=>{
+    try {
+        let ProductID = new ObjectId(req.params.ProductID);
+        let MatchStage = {$match:{productID:ProductID}};
+        let JoinWithProfileStage = {$lookup: {from:"profiles", localField:"userID", foreignField:"userID", as:"profile"}};
 
+        let UnwindProfileStage = {$unwind:"$profile"};
+
+
+        let ProjectionStage = {$project:{'des':1, 'rating':1,'profile.cus_name':1}};
+
+
+        // Query
+        let data = await reviewsModel.aggregate([
+            MatchStage,
+            JoinWithProfileStage,
+            UnwindProfileStage,
+            ProjectionStage
+        ])
+        return {status:"Success", data:data};
+
+    }catch (error) {
+        return  {status:"Failed", data:error.toString()};
+    }
 }
 
