@@ -47,8 +47,6 @@ export const ProductReviewListByID=async (req,res)=> {
     return res.json(result);
 }
 
-export const CreateProductReview =async (req,res)=> {
 
-}
 
 
