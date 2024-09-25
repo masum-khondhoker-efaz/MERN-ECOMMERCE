@@ -1,4 +1,3 @@
-import wishesModel from "../models/wishesModel.js";
 import mongoose from "mongoose";
 import cartsModel from "../models/cartsModel.js";
 const ObjectId = mongoose.Types.ObjectId;

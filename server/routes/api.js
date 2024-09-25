@@ -9,6 +9,7 @@ import * as InvoiceController from "../app/controllers/InvoiceController.js";
 import * as ProductController from "../app/controllers/ProductController.js";
 import * as WishlistController from "../app/controllers/WishlistController.js";
 import AuthenticationMiddleware from "../app/middlewares/AuthenticationMiddleware.js";
+import * as ProductReviewController  from "../app/controllers/ProductReviewController.js";
 
 
 
@@ -28,13 +29,14 @@ router.get("/BrandList", BrandController.BrandList)
 router.get("/CategoryList", CategoryController.CategoryList)
 
 //Cart list
-router.post("/CreateCart",AuthenticationMiddleware, CartListController.CreateCart)
-router.get("/ReadCartList",AuthenticationMiddleware, CartListController.ReadCartList)
-router.post("/UpdateCart",AuthenticationMiddleware, CartListController.UpdateCart)
-router.post("/RemoveCart",AuthenticationMiddleware, CartListController.RemoveCart)
+router.post("/CreateCart", AuthenticationMiddleware, CartListController.CreateCart)
+router.get("/ReadCartList", AuthenticationMiddleware, CartListController.ReadCartList)
+router.post("/UpdateCart", AuthenticationMiddleware, CartListController.UpdateCart)
+router.post("/RemoveCart", AuthenticationMiddleware, CartListController.RemoveCart)
 
 //Review list
-router.post("/CreateProductReview", ProductController.CreateProductReview)
+router.post("/CreateProductReview",AuthenticationMiddleware, ProductReviewController.CreateProductReview);
+router.post("/UpdateProductReview",AuthenticationMiddleware, ProductReviewController.UpdateProductReview);
 
 //Wish list
 router.post("/CreateWish", AuthenticationMiddleware, WishlistController.CreateWish)
